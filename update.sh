@@ -106,20 +106,20 @@ LOGFILE="$IPATH/lastlog"
 rm -f $LOGFILE
 touch $LOGFILE
 
-# if [[ "$1" == "test" ]]; then
-#    cp -T -a ./ /tmp/ax_test
-#    GIT=/tmp/ax_test
-# else
-#    getGIT "$REPO" "$BRANCH" "$GIT" >> $LOGFILE
-# fi
+if [[ "$1" == "test" ]]; then
+    cp -T -a ./ /tmp/ax_test
+    GIT=/tmp/ax_test
+else
+    getGIT "$REPO" "$BRANCH" "$GIT" >> $LOGFILE
+fi
 cd "$GIT"
 
-# if diff "$GIT/update.sh" "$IPATH/update.sh" &>/dev/null; then
-#    rm -f "$IPATH/update.sh"
-#   cp "$GIT/update.sh" "$IPATH/update.sh"
-#    bash "$IPATH/update.sh"
-#   exit $?
-# fi
+if diff "$GIT/update.sh" "$IPATH/update.sh" &>/dev/null; then
+    rm -f "$IPATH/update.sh"
+   cp "$GIT/update.sh" "$IPATH/update.sh"
+    bash "$IPATH/update.sh"
+   exit $?
+fi
 
 if [ -f /boot/adsb-config.txt ]; then
     source /boot/adsb-config.txt
