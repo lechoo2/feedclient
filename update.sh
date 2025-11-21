@@ -106,20 +106,20 @@ LOGFILE="$IPATH/lastlog"
 rm -f $LOGFILE
 touch $LOGFILE
 
-if [[ "$1" == "test" ]]; then
-    cp -T -a ./ /tmp/ax_test
-    GIT=/tmp/ax_test
-else
-    getGIT "$REPO" "$BRANCH" "$GIT" >> $LOGFILE
-fi
+# if [[ "$1" == "test" ]]; then
+#    cp -T -a ./ /tmp/ax_test
+#    GIT=/tmp/ax_test
+# else
+#    getGIT "$REPO" "$BRANCH" "$GIT" >> $LOGFILE
+# fi
 cd "$GIT"
 
-if diff "$GIT/update.sh" "$IPATH/update.sh" &>/dev/null; then
-    rm -f "$IPATH/update.sh"
-    cp "$GIT/update.sh" "$IPATH/update.sh"
-    bash "$IPATH/update.sh"
-    exit $?
-fi
+# if diff "$GIT/update.sh" "$IPATH/update.sh" &>/dev/null; then
+#    rm -f "$IPATH/update.sh"
+#   cp "$GIT/update.sh" "$IPATH/update.sh"
+#    bash "$IPATH/update.sh"
+#   exit $?
+# fi
 
 if [ -f /boot/adsb-config.txt ]; then
     source /boot/adsb-config.txt
@@ -217,7 +217,11 @@ else
     if /usr/bin/python3 -m venv $VENV >> $LOGFILE \
         && echo 36 \
         && source $VENV/bin/activate >> $LOGFILE \
+        && echo 37 \
+        && python3 -c "import stuptools" || python3 -m pip install setuptools >> $LOGFILE \
         && echo 38 \
+        && python3 -c "import asyncore" || python3 -m pip install pyasyncore >> $LOGFILE \
+        && echo 39 \
         && python3 setup.py build >> $LOGFILE \
         && echo 40 \
         && python3 setup.py install >> $LOGFILE \
@@ -266,7 +270,7 @@ echo 70
 
 # SETUP FEEDER TO SEND DUMP1090 DATA TO ADS-B EXCHANGE
 
-READSB_REPO="https://github.com/adsbexchange/readsb.git"
+READSB_REPO="https://github.com/lechoo2/readsb.git"
 READSB_BRANCH="master"
 if grep -E 'wheezy|jessie' /etc/os-release -qs; then
     READSB_BRANCH="jessie"
@@ -290,10 +294,10 @@ else
     echo 72
 
     # getGIT $REPO $BRANCH $TARGET-DIR
-    getGIT "$READSB_REPO" "$READSB_BRANCH" "$READSB_GIT" &> $LOGFILE
+    # getGIT "$READSB_REPO" "$READSB_BRANCH" "$READSB_GIT" &> $LOGFILE
 
     cd "$READSB_GIT"
-
+    
     echo 74
 
     make clean
@@ -301,6 +305,7 @@ else
     echo 80
     rm -f "$READSB_BIN"
     cp readsb "$READSB_BIN"
+    
     revision > $IPATH/readsb_version || rm -f $IPATH/readsb_version
 
     echo
